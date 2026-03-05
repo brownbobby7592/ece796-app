@@ -12,6 +12,11 @@
       "supportsTablet": true
     },
     "android": {
+      "permissions": [
+        "android.permission.BLUETOOTH_SCAN",
+        "android.permission.BLUETOOTH_CONNECT",
+        "android.permission.ACCESS_FINE_LOCATION"
+      ],
       "adaptiveIcon": {
         "backgroundColor": "#E6F4FE",
         "foregroundImage": "./assets/images/android-icon-foreground.png",
@@ -19,7 +24,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "com.jackdubeau.ece796app"
     },
     "web": {
       "output": "static",
@@ -27,6 +33,16 @@
     },
     "plugins": [
       "expo-router",
+      [
+        "react-native-ble-plx",
+        {
+          "isBackgroundEnabled": false,
+          "modes": [
+            "central"
+          ],
+          "bluetoothAlwaysPermission": "Allow ECE796 App to access Bluetooth"
+        }
+      ],
       [
         "expo-splash-screen",
         {
@@ -43,6 +59,31 @@
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "ble": {
+        "serviceUuid": "f0debc9a-7856-3412-f0de-bc9a78563412",
+        "dataCharacteristicUuid": "f3debc9a-7856-3412-f3de-bc9a78563412",
+        "controlCharacteristicUuid": "",
+        "commandStart": "START",
+        "commandStop": "STOP",
+        "protocol": {
+          "packetMode": "lab2-33",
+          "textDelimiter": "\n",
+          "csvHasTimestamp": false,
+          "binaryPayloadBytes": 33,
+          "binaryHeaderHex": "AA AA AA",
+          "binaryEndian": "little",
+          "accelScale": 0.000598,
+          "gyroScale": 0.007633587786259542,
+          "eulerScale": 1
+        }
+      },
+      "eas": {
+        "projectId": "b63709dd-5655-4d06-9ec7-1be44ccb5240"
+      }
+    },
+    "owner": "jack-dubeau"
   }
 }

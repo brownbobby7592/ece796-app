@@ -42,6 +42,35 @@ To learn more about developing your project with Expo, look at the following res
 - [Expo documentation](https://docs.expo.dev/): Learn fundamentals, or go into advanced topics with our [guides](https://docs.expo.dev/guides).
 - [Learn Expo tutorial](https://docs.expo.dev/tutorial/introduction/): Follow a step-by-step tutorial where you'll create a project that runs on Android, iOS, and the web.
 
+## BLE Configuration Notes
+
+This app uses Bluetooth Low Energy (BLE) in **Central** mode on the phone side.
+
+- **GAP roles**
+   - Phone app: Central
+   - ESP32 sensor: Peripheral
+- **GATT service UUID**
+   - `f0debc9a-7856-3412-f0de-bc9a78563412`
+- **GATT data characteristic UUID**
+   - `f3debc9a-7856-3412-f3de-bc9a78563412`
+- **Control characteristic UUID**
+   - currently empty (`""`), so command writes are effectively disabled unless a control UUID is configured
+
+### ATT data path used by the app
+
+1. Connect to peripheral and discover services/characteristics.
+2. Subscribe to data characteristic notifications/indications.
+3. If notifications stall, fallback polling reads are performed.
+4. Decode custom Lab2 packet frames (`AA AA AA`, fixed 33 bytes).
+
+### Packet conversion summary
+
+- Raw accel and gyro are parsed as `int16` and converted using scale factors in `expo.extra.ble.protocol`.
+- Quaternion components (`qx/qy/qz`) are parsed as float16, then converted to Euler angles (degrees).
+- Timestamp from packet is treated as microseconds and normalized to milliseconds for app timelines.
+
+All BLE runtime configuration lives in `app.json` under `expo.extra.ble`.
+
 ## Join the community
 
 Join our community of developers creating universal apps.

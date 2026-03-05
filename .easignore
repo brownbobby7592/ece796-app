@@ -1,0 +1,9 @@
+node_modules
+.expo
+.git
+.vscode
+android
+ios
+*.log
+Thumbs.db
+desktop.ini
