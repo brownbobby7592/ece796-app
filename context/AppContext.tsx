@@ -147,6 +147,7 @@ export function AppProvider({ children }: { children: ReactNode }) {
           setCurrentIMUData(sample);
           setImuHistory((previous) => [...previous.slice(-2999), sample]);
 
+          // Estimate Hz from a rolling timestamp window: (N-1) intervals / elapsed ms.
           sampleTimestampsRef.current = [...sampleTimestampsRef.current.slice(-80), sample.timestamp];
           const samples = sampleTimestampsRef.current;
           if (samples.length > 1) {

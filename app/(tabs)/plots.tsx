@@ -178,6 +178,7 @@ function PlotCard({ title, children }: { title: string; children: React.ReactNod
 }
 
 function movingAverage(values: number[], windowSize: number): number[] {
+  // Guard chart math against NaN/Infinity before smoothing.
   const normalizedValues = values.map((value) => safeNumber(value, 0));
 
   if (windowSize <= 1 || values.length < 3) {
@@ -185,6 +186,7 @@ function movingAverage(values: number[], windowSize: number): number[] {
   }
 
   const halfWindow = Math.floor(windowSize / 2);
+  // Symmetric window average for each point to reduce jitter.
   return normalizedValues.map((_, index) => {
     const start = Math.max(0, index - halfWindow);
     const end = Math.min(normalizedValues.length - 1, index + halfWindow);
@@ -206,6 +208,7 @@ function toPolylinePoints(
   height: number,
   yDomain?: [number, number],
 ): string {
+  // Convert sensor values into SVG polyline x,y coordinates.
   const normalizedValues = values.map((value) => safeNumber(value, 0));
 
   if (normalizedValues.length < 2) {
@@ -233,6 +236,7 @@ function roundUpToStep(value: number, step: number): number {
 }
 
 function safeNumber(value: number, fallback = 0): number {
+  // Rendering-safe numeric fallback used across plot transforms.
   return Number.isFinite(value) ? value : fallback;
 }
 

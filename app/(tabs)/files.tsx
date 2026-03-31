@@ -3,6 +3,7 @@ import { Alert, Pressable, ScrollView, StyleSheet, Text, View } from 'react-nati
 import { useApp } from '@/context/AppContext';
 
 function formatDuration(seconds: number): string {
+  // Present recording duration as M:SS in Files tab cards.
   const minutes = Math.floor(seconds / 60);
   const remainder = seconds % 60;
   return `${minutes}:${remainder.toString().padStart(2, '0')}`;

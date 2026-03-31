@@ -163,6 +163,7 @@ function decodeKeyValuePayload(trimmed: string, timestamp: number): IMUData | nu
 
 // Convert binary string payload into bytes for binary frame parsing.
 function fromBytes(payload: string): Uint8Array {
+  // Treat each JS string char as one raw byte (0..255) from BLE payload.
   const bytes = new Uint8Array(payload.length);
   for (let index = 0; index < payload.length; index += 1) {
     bytes[index] = payload.charCodeAt(index) & 0xff;
@@ -173,6 +174,7 @@ function fromBytes(payload: string): Uint8Array {
 
 // Read signed 16-bit integer at byte offset in configured endianness.
 function readInt16(bytes: Uint8Array, offset: number, endian: 'little' | 'big'): number {
+  // Assemble signed int16 from two bytes with configured endianness.
   const low = bytes[offset];
   const high = bytes[offset + 1];
   const raw = endian === 'little' ? (high << 8) | low : (low << 8) | high;
@@ -335,6 +337,7 @@ function decodeLab2Packet(
       ? Number(packetTimestampRaw)
       : fallbackTimestamp;
 
+  // Firmware timestamp is microseconds; app timeline uses milliseconds.
   const normalizedTimestamp = Math.floor(safePacketTimestamp / 1000);
 
   const accelRaw = [
@@ -352,6 +355,7 @@ function decodeLab2Packet(
   const qx = halfToFloat(view.getUint16(27, options.binaryEndian === 'little'));
   const qy = halfToFloat(view.getUint16(29, options.binaryEndian === 'little'));
   const qz = halfToFloat(view.getUint16(31, options.binaryEndian === 'little'));
+  // Euler is derived from quaternion vector part (qw reconstructed in helper).
   const euler = quaternionToEulerDegrees(qx, qy, qz);
 
   return {

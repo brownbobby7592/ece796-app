@@ -172,6 +172,7 @@ export class BleClient {
    */
   private decodeBase64ToBytes(input: string): Uint8Array {
     const alphabet = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/';
+    // Strip noise/newlines from transport payload before decoding.
     const clean = input.replace(/[^A-Za-z0-9+/=]/g, '');
 
     if (clean.length === 0) {
@@ -180,6 +181,7 @@ export class BleClient {
 
     const output: number[] = [];
     for (let index = 0; index < clean.length; index += 4) {
+      // Decode each 4-char Base64 quantum into up to 3 raw bytes.
       const c1 = clean[index] ?? 'A';
       const c2 = clean[index + 1] ?? 'A';
       const c3 = clean[index + 2] ?? '=';
